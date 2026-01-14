@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import generateMnemonics from "../lib/mneomic";
 import SolonaWallet from "../lib/solana";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, VerifiedIcon } from "lucide-react";
+import getSolBalance from "../lib/solBalance";
+import { getKiratBalance } from "../lib/kiratBalance";
 
 type WalletData = {
   publicKey: string;
@@ -14,6 +16,8 @@ export default function Wallet() {
   const [mnemonics, setMnemonics] = useState<string>("");
   const [wallet, setWallet] = useState<WalletData | null>(null);
   const [showSecret, setShowSecret] = useState(false);
+  const [solbalance, setSolBalance] = useState(0);
+  const [kiratbalance, setKiratBalance] = useState(0);
 
   function getMnemonics() {
     const data = generateMnemonics();
@@ -23,13 +27,36 @@ export default function Wallet() {
 
   function generateWallet() {
     const data = SolonaWallet(mnemonics);
+    localStorage.setItem("wallet", JSON.stringify(data));
     if (data) setWallet(data);
+  }
+
+  async function fetchBalance() {
+    if (!wallet?.publicKey) return;
+    const data = await getSolBalance(wallet.publicKey);
+    setSolBalance(data);
+  }
+
+  async function fetchKiratBalance() {
+    if (!wallet?.publicKey) return;
+    const data = await getKiratBalance(wallet.publicKey);
+    console.log("data", data);
+    setKiratBalance(data);
   }
 
   useEffect(() => {
     const data = localStorage.getItem("mnemonics");
+    const wallet = localStorage.getItem("wallet");
     if (data) setMnemonics(data);
+    if (wallet) setWallet(JSON.parse(wallet));
   }, []);
+
+  useEffect(() => {
+    if (wallet?.publicKey) {
+      fetchBalance();
+      fetchKiratBalance();
+    }
+  }, [wallet]);
 
   return (
     <div>
@@ -59,7 +86,9 @@ export default function Wallet() {
 
             <div className="mt-4">
               <div className="flex items-center justify-between px-2 md:px-10">
-                <h1 className="font-bold text-xs md:text-lg lg:text-xl">SOLANA WALLET</h1>
+                <h1 className="font-bold text-xs md:text-base lg:text-lg">
+                  SOLANA WALLET
+                </h1>
                 <button
                   onClick={generateWallet}
                   className="bg-green-700 px-2 text-xs md:px-4 py-2 rounded-md text-black font-bold cursor-pointer"
@@ -69,7 +98,7 @@ export default function Wallet() {
               </div>
 
               {wallet ? (
-                <div className="bg-neutral-900/80 p-4 mt-4 flex flex-col gap-2 overflow-y-scroll md:overflow-y-hidden">
+                <div className="bg-neutral-900/80 p-4 mt-4 flex flex-col gap-2 overflow-y-scroll w-full md:overflow-y-hidden">
                   <div className="flex flex-col gap-2">
                     <h2 className="text-lg font-semibold">public key</h2>
                     <code className="text-xs ">{wallet?.publicKey}</code>
@@ -110,6 +139,38 @@ export default function Wallet() {
           </div>
         )}
       </div>
+
+      {wallet && (
+        <div className="mt-4 pr-10">
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-2 bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
+              <img src="/solana.png" alt="sol" className="w-12 h-12" />
+              <div className="">
+                <h1 className="font-bold flex gap-2 items-center">
+                  Solana
+                  <span>
+                    <VerifiedIcon size={18} fill="#7C3AED" />
+                  </span>
+                </h1>
+                <p>{solbalance} SOL</p>
+              </div>
+            </div>
+
+            <div className="flex gap-2 bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
+              <img src="/coin.png" alt="sol" className="w-14 h-14" />
+              <div className="">
+                <h1 className="font-bold flex gap-2 items-center">
+                  100x Devs
+                  <span>
+                    <VerifiedIcon size={18} fill="#7C3AED" />
+                  </span>
+                </h1>
+                <p>{kiratbalance} KIRAT</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
