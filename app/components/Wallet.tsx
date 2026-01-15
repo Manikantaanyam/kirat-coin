@@ -5,7 +5,7 @@ import generateMnemonics from "../lib/mneomic";
 import SolonaWallet from "../lib/solana";
 import { Eye, EyeOff, VerifiedIcon } from "lucide-react";
 import getSolBalance from "../lib/solBalance";
-import { getKiratBalance } from "../lib/kiratBalance";
+import getKiratBalance from "../lib/kiratBalance";
 
 type WalletData = {
   publicKey: string;
@@ -17,7 +17,7 @@ export default function Wallet() {
   const [wallet, setWallet] = useState<WalletData | null>(null);
   const [showSecret, setShowSecret] = useState(false);
   const [solbalance, setSolBalance] = useState(0);
-  const [kiratbalance, setKiratBalance] = useState(0);
+  const [kiratbalance, setKiratBalance] = useState<number | undefined>(0);
 
   function getMnemonics() {
     const data = generateMnemonics();

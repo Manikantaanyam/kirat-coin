@@ -1,26 +1,43 @@
+import {
+  getAccount,
+  getAssociatedTokenAddress,
+  TOKEN_2022_PROGRAM_ID,
+  TokenAccountNotFoundError,
+  TokenInvalidAccountOwnerError,
+} from "@solana/spl-token";
 import { clusterApiUrl, Connection, PublicKey } from "@solana/web3.js";
 
-const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
-
-export async function getKiratBalance(publicKey: string): Promise<number> {
-  const walletPublicKey = new PublicKey(publicKey);
-
-  const mintAddress = new PublicKey(process.env.MINT_ADDRESS as string);
-
-  const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
-    walletPublicKey,
-    {
-      mint: mintAddress,
-    }
+export default async function getKiratBalance(publicKey: string) {
+  const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+  const publickey = new PublicKey(publicKey);
+  const mintAddress = new PublicKey(
+    "4Ej9XcTahC3i3o9H42Sv7ymmR8Si5QcsfnBrL9yGhM9A"
   );
-  console.log("token", tokenAccounts);
 
-  if (tokenAccounts.value.length === 0) {
-    return 0;
+  const ata = await getAssociatedTokenAddress(
+    mintAddress,
+    publickey,
+    undefined,
+    TOKEN_2022_PROGRAM_ID
+  );
+
+  try {
+    const account = await getAccount(
+      connection,
+      ata,
+      "confirmed",
+      TOKEN_2022_PROGRAM_ID
+    );
+
+    console.log(Number(account.amount) / 10 ** 9);
+    console.log(account.address);
+    return Number(account.amount) / 10 ** 9;
+  } catch (e) {
+    if (
+      e instanceof TokenAccountNotFoundError ||
+      e instanceof TokenInvalidAccountOwnerError
+    ) {
+      return 0;
+    }
   }
-
-  const tokenInfo = tokenAccounts.value[0].account.data.parsed.info.tokenAmount;
-  console.log("token", tokenInfo);
-
-  return Number(tokenInfo.amount) / 10 ** tokenInfo.decimals;
 }
