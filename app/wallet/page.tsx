@@ -8,7 +8,7 @@ export default function Page() {
         subscribe to the channel and get 2 100x Devs coins.
       </h1>
       <div className="flex flex-col md:flex-row gap-2 border border-white/20 p-3 overflow-x-hidden overflow-y-auto">
-        <div className="flex-1 md:border-r border-r-gray-400/40">
+        <div className="flex-1 md:border-r border-r-gray-400/40 md:pr-2">
           <Wallet />
         </div>
         <div className="flex flex-col items-center justify-center shrink-0 min-w-25">

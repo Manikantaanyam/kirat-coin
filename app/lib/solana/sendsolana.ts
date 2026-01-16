@@ -33,10 +33,6 @@ export default async function sendSolana(
       })
     );
 
-    const { blockhash } = await connection.getLatestBlockhash();
-    transaction.recentBlockhash = blockhash;
-    transaction.feePayer = keypair.publicKey;
-
     const signature = await sendAndConfirmTransaction(connection, transaction, [
       keypair,
     ]);

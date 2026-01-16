@@ -48,9 +48,9 @@ export default function SendModal({ onClose, secretKey, type }: Props) {
   }
 
   return (
-    <div className="relative bg-neutral-900 p-6 rounded-xl w-95 space-y-4">
+    <div className="relative bg-neutral-900 p-6 rounded-xl w-60 md:w-95 space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="font-bold text-lg">
+        <h1 className="font-bold text-sm md:text-lg">
           Send {type === "SOL" ? "SOL" : "KIRAT"}
         </h1>
         <button onClick={onClose}>
@@ -62,18 +62,18 @@ export default function SendModal({ onClose, secretKey, type }: Props) {
 
       <img
         src={`${type === "SOL" ? "/solana.png" : "/coin.png"}`}
-        className="w-16 h-16 mx-auto"
+        className="w-10 h-10 md:w-16 md:h-16 mx-auto"
       />
 
       <input
         placeholder="Receiver address"
-        className="w-full px-4 py-2 rounded-md bg-neutral-800 border border-neutral-700"
+        className="w-full px-4 py-1.5 md:py-2 rounded-md bg-neutral-800 border border-neutral-700"
         onChange={(e) => setDestinationAddress(e.target.value)}
       />
 
       <input
         placeholder="Amount"
-        className="w-full px-4 py-2 rounded-md bg-neutral-800 border border-neutral-700"
+        className="w-full px-4 py-1.5 md:py-2 rounded-md bg-neutral-800 border border-neutral-700"
         onChange={(e) => setAmount(Number(e.target.value))}
       />
 
@@ -101,10 +101,10 @@ export default function SendModal({ onClose, secretKey, type }: Props) {
       </button>
       {error && (
         <div className="bg-red-500/10 border border-red-500/30 rounded-md p-3 space-y-1">
-          <p className="text-center text-red-500 font-semibold">
+          <p className="text-center text-xs md:text-sm text-red-500 font-semibold">
             Transaction failed
           </p>
-          <p className="text-xs text-center text-red-400">
+          <p className="text-[8px] md:text-xs text-center text-red-400">
             Please check that you have sufficient SOL and KIRAT balance, and
             that the receiver address is correct.
           </p>

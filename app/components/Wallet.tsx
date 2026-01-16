@@ -144,19 +144,23 @@ export default function Wallet() {
       </div>
 
       {wallet && (
-        <div className="mt-4 pr-10">
+        <div className="mt-4 ">
           <div className="flex flex-col gap-2">
             <div className="flex justify-between bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
               <div className="flex gap-2">
-                <img src="/solana.png" alt="sol" className="w-12 h-12" />
+                <img
+                  src="/solana.png"
+                  alt="sol"
+                  className="w-10 h-10 md:w-14 md:h-14"
+                />
                 <div className="">
-                  <h1 className="font-bold flex gap-2 items-center">
+                  <h1 className="font-bold flex gap-2 items-center text-sm md:text-lg">
                     Solana
                     <span>
-                      <VerifiedIcon size={18} fill="#7C3AED" />
+                      <VerifiedIcon className="w-4 h-4" fill="#7C3AED" />
                     </span>
                   </h1>
-                  <p>{solbalance} SOL</p>
+                  <p className="text-xs md:text-sm">{solbalance} SOL</p>
                 </div>
               </div>
 
@@ -166,10 +170,10 @@ export default function Wallet() {
                     setShow((p) => !p);
                     setTokenType("SOL");
                   }}
-                  className="px-6 py-1.5 cursor-pointer rounded-md bg-white text-black flex gap-2 items-center "
+                  className=" p-1.5 md:px-6 md:py-1.5 cursor-pointer rounded-md bg-white text-black flex gap-2 items-center "
                 >
                   <Send size={16} />
-                  Send
+                  <span className="hidden md:flex "> Send</span>
                 </button>
                 {show && (
                   <div
@@ -190,15 +194,19 @@ export default function Wallet() {
 
             <div className="flex justify-between bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
               <div className="flex gap-2">
-                <img src="/coin.png" alt="sol" className="w-14 h-14" />
+                <img
+                  src="/coin.png"
+                  alt="sol"
+                  className="w-10 h-10 md:w-14 md:h-14"
+                />
                 <div className="">
-                  <h1 className="font-bold flex gap-2 items-center">
+                  <h1 className="font-bold flex gap-2 items-center text-sm md:text-lg">
                     100x Devs
                     <span>
-                      <VerifiedIcon size={18} fill="#7C3AED" />
+                      <VerifiedIcon className="w-4 h-4" fill="#7C3AED" />
                     </span>
                   </h1>
-                  <p>{kiratbalance} KIRAT</p>
+                  <p className="text-xs md:text-sm">{kiratbalance} KIRAT</p>
                 </div>
               </div>
 
@@ -208,10 +216,10 @@ export default function Wallet() {
                     setTokenType("TOKEN");
                     setShow((p) => !p);
                   }}
-                  className="px-6 py-1.5 cursor-pointer rounded-md bg-white text-black flex gap-2 items-center "
+                  className="p-1.5 md:px-6 md:py-1.5 cursor-pointer rounded-md bg-white text-black flex gap-2 items-center "
                 >
                   <Send size={16} />
-                  Send
+                  <span className="hidden md:flex">Send</span>
                 </button>
               </div>
               {show && (
