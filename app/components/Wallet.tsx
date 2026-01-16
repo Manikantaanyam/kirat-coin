@@ -20,6 +20,7 @@ export default function Wallet() {
   const [solbalance, setSolBalance] = useState<number>(0);
   const [kiratbalance, setKiratBalance] = useState<number | undefined>(0);
   const [show, setShow] = useState<boolean>(false);
+  const [tokenType, setTokenType] = useState<"SOL" | "TOKEN">();
 
   function getMnemonics() {
     const data = generateMnemonics();
@@ -160,10 +161,30 @@ export default function Wallet() {
               </div>
 
               <div>
-                <button className="px-6 py-1.5 cursor-pointer rounded-md bg-white text-black flex gap-2 items-center ">
+                <button
+                  onClick={() => {
+                    setShow((p) => !p);
+                    setTokenType("SOL");
+                  }}
+                  className="px-6 py-1.5 cursor-pointer rounded-md bg-white text-black flex gap-2 items-center "
+                >
                   <Send size={16} />
                   Send
                 </button>
+                {show && (
+                  <div
+                    className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+                    onClick={() => setShow(false)}
+                  >
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <SendModal
+                        onClose={() => setShow(false)}
+                        secretKey={wallet.secretKey}
+                        type={tokenType}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -183,7 +204,10 @@ export default function Wallet() {
 
               <div className="relative">
                 <button
-                  onClick={() => setShow((p) => !p)}
+                  onClick={() => {
+                    setTokenType("TOKEN");
+                    setShow((p) => !p);
+                  }}
                   className="px-6 py-1.5 cursor-pointer rounded-md bg-white text-black flex gap-2 items-center "
                 >
                   <Send size={16} />
@@ -199,6 +223,7 @@ export default function Wallet() {
                     <SendModal
                       onClose={() => setShow(false)}
                       secretKey={wallet.secretKey}
+                      type={tokenType}
                     />
                   </div>
                 </div>

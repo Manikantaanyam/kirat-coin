@@ -3,15 +3,17 @@ import { Send, X } from "lucide-react";
 import bs58 from "bs58";
 import transfer100xDevs from "../lib/kirat/transferKirat";
 import { useState } from "react";
+import sendSolana from "../lib/solana/sendsolana";
 
 type Props = {
   onClose: () => void;
   secretKey: string;
+  type: string | undefined;
 };
 
-export default function SendModal({ onClose, secretKey }: Props) {
+export default function SendModal({ onClose, secretKey, type }: Props) {
   const [destinationAddress, setDestinationAddress] = useState<string>("");
-  const [amount, setAmount] = useState<string>("");
+  const [amount, setAmount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState(false);
 
@@ -31,18 +33,37 @@ export default function SendModal({ onClose, secretKey }: Props) {
     }
   }
 
+  async function sendSol() {
+    try {
+      setLoading(true);
+      const data = await sendSolana(keypair, destinationAddress, amount);
+      console.log("data", data);
+      setLoading(false);
+    } catch (e) {
+      setError(true);
+      console.log("Error while transferring solana", e);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="relative bg-neutral-900 p-6 rounded-xl w-95 space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="font-bold text-lg">Send KIRAT</h1>
+        <h1 className="font-bold text-lg">
+          Send {type === "SOL" ? "SOL" : "KIRAT"}
+        </h1>
         <button onClick={onClose}>
           <X size={18} />
         </button>
       </div>
-      
+
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-green-600/10 blur-[100px] rounded-full pointer-events-none" />
 
-      <img src="/coin.png" className="w-16 h-16 mx-auto" />
+      <img
+        src={`${type === "SOL" ? "/solana.png" : "/coin.png"}`}
+        className="w-16 h-16 mx-auto"
+      />
 
       <input
         placeholder="Receiver address"
@@ -53,11 +74,17 @@ export default function SendModal({ onClose, secretKey }: Props) {
       <input
         placeholder="Amount"
         className="w-full px-4 py-2 rounded-md bg-neutral-800 border border-neutral-700"
-        onChange={(e) => setAmount(e.target.value)}
+        onChange={(e) => setAmount(Number(e.target.value))}
       />
 
       <button
-        onClick={sendTokens}
+        onClick={() => {
+          if (type === "SOL") {
+            sendSol();
+          } else {
+            sendTokens();
+          }
+        }}
         disabled={loading}
         className={`w-full py-2 rounded-md flex items-center justify-center gap-2
     ${loading ? "bg-gray-300 cursor-not-allowed" : "bg-white cursor-pointer"}

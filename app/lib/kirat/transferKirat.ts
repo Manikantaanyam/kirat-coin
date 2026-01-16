@@ -17,7 +17,7 @@ import {
 export default async function transfer100xDevs(
   keypair: Keypair,
   destinationPublicKey: string,
-  amt: string
+  amt: number
 ) {
   const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
   const destinationPubKey = new PublicKey(destinationPublicKey);
@@ -61,7 +61,7 @@ export default async function transfer100xDevs(
     );
   }
 
-  const amount = BigInt(Math.round(parseFloat(amt) * Math.pow(10, 9)));
+  const amount = BigInt(Math.round(amt * Math.pow(10, 9)));
   tx.add(
     createTransferInstruction(
       userATA,
