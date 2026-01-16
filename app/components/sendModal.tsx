@@ -32,13 +32,15 @@ export default function SendModal({ onClose, secretKey }: Props) {
   }
 
   return (
-    <div className="bg-neutral-900 p-6 rounded-xl w-95 space-y-4">
+    <div className="relative bg-neutral-900 p-6 rounded-xl w-95 space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="font-bold text-lg">Send KIRAT</h1>
         <button onClick={onClose}>
           <X size={18} />
         </button>
       </div>
+      
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-green-600/10 blur-[100px] rounded-full pointer-events-none" />
 
       <img src="/coin.png" className="w-16 h-16 mx-auto" />
 

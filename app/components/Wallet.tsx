@@ -192,7 +192,7 @@ export default function Wallet() {
               </div>
               {show && (
                 <div
-                  className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                  className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
                   onClick={() => setShow(false)}
                 >
                   <div onClick={(e) => e.stopPropagation()}>
