@@ -2,6 +2,7 @@ import bs58 from "bs58";
 import { Keypair } from "@solana/web3.js";
 import { derivePath } from "ed25519-hd-key";
 import { mnemonicToSeedSync } from "bip39";
+import distributeTokens from "../kirat/distributeTokens";
 
 export default function SolonaWallet(mnemonic: string) {
   const seed = mnemonicToSeedSync(mnemonic);
@@ -14,6 +15,8 @@ export default function SolonaWallet(mnemonic: string) {
   const publicKey = Keypair.fromSecretKey(secretKey).publicKey.toBase58();
 
   const secretKeyBase58 = bs58.encode(secretKey);
+
+  const data = distributeTokens(publicKey);
 
   return {
     publicKey,

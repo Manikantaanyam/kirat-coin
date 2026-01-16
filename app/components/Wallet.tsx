@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import generateMnemonics from "../lib/mneomic";
-import SolonaWallet from "../lib/solana";
-import { Eye, EyeOff, VerifiedIcon } from "lucide-react";
-import getSolBalance from "../lib/solBalance";
-import getKiratBalance from "../lib/kiratBalance";
+import generateMnemonics from "../lib/mnemonics/mneomic";
+import SolonaWallet from "../lib/solana/solana";
+import { Eye, EyeOff, Send, VerifiedIcon } from "lucide-react";
+import getSolBalance from "../lib/solana/solBalance";
+import getKiratBalance from "../lib/kirat/kiratBalance";
 
 type WalletData = {
   publicKey: string;
@@ -143,16 +143,18 @@ export default function Wallet() {
       {wallet && (
         <div className="mt-4 pr-10">
           <div className="flex flex-col gap-2">
-            <div className="flex gap-2 bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
-              <img src="/solana.png" alt="sol" className="w-12 h-12" />
-              <div className="">
-                <h1 className="font-bold flex gap-2 items-center">
-                  Solana
-                  <span>
-                    <VerifiedIcon size={18} fill="#7C3AED" />
-                  </span>
-                </h1>
-                <p>{solbalance} SOL</p>
+            <div className="flex  bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
+              <div className="flex gap-2">
+                <img src="/solana.png" alt="sol" className="w-12 h-12" />
+                <div className="">
+                  <h1 className="font-bold flex gap-2 items-center">
+                    Solana
+                    <span>
+                      <VerifiedIcon size={18} fill="#7C3AED" />
+                    </span>
+                  </h1>
+                  <p>{solbalance} SOL</p>
+                </div>
               </div>
             </div>
 
