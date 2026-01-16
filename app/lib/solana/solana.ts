@@ -16,7 +16,7 @@ export default function SolonaWallet(mnemonic: string) {
 
   const secretKeyBase58 = bs58.encode(secretKey);
 
-  const data = distributeTokens(publicKey);
+  // const data = distributeTokens(publicKey);
 
   return {
     publicKey,

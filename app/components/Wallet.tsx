@@ -6,6 +6,7 @@ import SolonaWallet from "../lib/solana/solana";
 import { Eye, EyeOff, Send, VerifiedIcon } from "lucide-react";
 import getSolBalance from "../lib/solana/solBalance";
 import getKiratBalance from "../lib/kirat/kiratBalance";
+import SendModal from "./sendModal";
 
 type WalletData = {
   publicKey: string;
@@ -15,9 +16,10 @@ type WalletData = {
 export default function Wallet() {
   const [mnemonics, setMnemonics] = useState<string>("");
   const [wallet, setWallet] = useState<WalletData | null>(null);
-  const [showSecret, setShowSecret] = useState(false);
-  const [solbalance, setSolBalance] = useState(0);
+  const [showSecret, setShowSecret] = useState<boolean>(false);
+  const [solbalance, setSolBalance] = useState<number>(0);
   const [kiratbalance, setKiratBalance] = useState<number | undefined>(0);
+  const [show, setShow] = useState<boolean>(false);
 
   function getMnemonics() {
     const data = generateMnemonics();
@@ -143,7 +145,7 @@ export default function Wallet() {
       {wallet && (
         <div className="mt-4 pr-10">
           <div className="flex flex-col gap-2">
-            <div className="flex  bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
+            <div className="flex justify-between bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
               <div className="flex gap-2">
                 <img src="/solana.png" alt="sol" className="w-12 h-12" />
                 <div className="">
@@ -156,19 +158,51 @@ export default function Wallet() {
                   <p>{solbalance} SOL</p>
                 </div>
               </div>
+
+              <div>
+                <button className="px-6 py-1.5 cursor-pointer rounded-md bg-white text-black flex gap-2 items-center ">
+                  <Send size={16} />
+                  Send
+                </button>
+              </div>
             </div>
 
-            <div className="flex gap-2 bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
-              <img src="/coin.png" alt="sol" className="w-14 h-14" />
-              <div className="">
-                <h1 className="font-bold flex gap-2 items-center">
-                  100x Devs
-                  <span>
-                    <VerifiedIcon size={18} fill="#7C3AED" />
-                  </span>
-                </h1>
-                <p>{kiratbalance} KIRAT</p>
+            <div className="flex justify-between bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
+              <div className="flex gap-2">
+                <img src="/coin.png" alt="sol" className="w-14 h-14" />
+                <div className="">
+                  <h1 className="font-bold flex gap-2 items-center">
+                    100x Devs
+                    <span>
+                      <VerifiedIcon size={18} fill="#7C3AED" />
+                    </span>
+                  </h1>
+                  <p>{kiratbalance} KIRAT</p>
+                </div>
               </div>
+
+              <div className="relative">
+                <button
+                  onClick={() => setShow((p) => !p)}
+                  className="px-6 py-1.5 cursor-pointer rounded-md bg-white text-black flex gap-2 items-center "
+                >
+                  <Send size={16} />
+                  Send
+                </button>
+              </div>
+              {show && (
+                <div
+                  className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+                  onClick={() => setShow(false)}
+                >
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <SendModal
+                      onClose={() => setShow(false)}
+                      secretKey={wallet.secretKey}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
