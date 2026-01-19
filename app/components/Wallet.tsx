@@ -7,6 +7,7 @@ import { Eye, EyeOff, Send, VerifiedIcon } from "lucide-react";
 import getSolBalance from "../lib/solana/solBalance";
 import getKiratBalance from "../lib/kirat/kiratBalance";
 import SendModal from "./sendModal";
+import TransactionsData from "./TransactionsData";
 
 type WalletData = {
   publicKey: string;
@@ -62,119 +63,171 @@ export default function Wallet() {
   }, [wallet]);
 
   return (
-    <div>
-      <div className="relative w-full flex flex-col cursor-pointer space-y-3 p-4 bg-[#121212b3] backdrop-blur-md">
-        <button
-          onClick={getMnemonics}
-          disabled={mnemonics.length > 0}
-          className={`px-3 text-sm md:px-6 py-2 bg-green-600 text-black rounded-md font-bold flex mx-auto cursor-pointer`}
-        >
-          Generate Seed
-        </button>
+    <div className="flex flex-col gap-4">
+      <div>
+        <div className="relative w-full flex flex-col cursor-pointer space-y-3 p-4 bg-[#121212b3] backdrop-blur-md">
+          <button
+            onClick={getMnemonics}
+            disabled={mnemonics.length > 0}
+            className={`px-3 text-sm md:px-6 py-2 bg-green-600 text-black rounded-md font-bold flex mx-auto cursor-pointer`}
+          >
+            Generate Seed
+          </button>
 
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-green-600/10 blur-[100px] rounded-full pointer-events-none" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-green-600/10 blur-[100px] rounded-full pointer-events-none" />
 
-        {mnemonics ? (
-          <div>
-            <div className="grid grid-cols-3  lg:grid-cols-4 gap-3">
-              {mnemonics.split(" ").map((word, index) => (
-                <div
-                  key={index}
-                  className="border border-slate-100/10  rounded-lg p-1 flex justify-center gap-2 overflow-hidden"
-                >
-                  <span className="font-medium truncate">{word}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-4">
-              <div className="flex items-center justify-between px-2 md:px-10">
-                <h1 className="font-bold text-xs md:text-base lg:text-lg">
-                  SOLANA WALLET
-                </h1>
-                <button
-                  onClick={generateWallet}
-                  className="bg-green-700 px-2 text-xs md:px-4 py-2 rounded-md text-black font-bold cursor-pointer"
-                >
-                  Add wallet
-                </button>
+          {mnemonics ? (
+            <div>
+              <div className="grid grid-cols-3  lg:grid-cols-4 gap-3">
+                {mnemonics.split(" ").map((word, index) => (
+                  <div
+                    key={index}
+                    className="border border-slate-100/10  rounded-lg p-1 flex justify-center gap-2 overflow-hidden"
+                  >
+                    <span className="font-medium truncate">{word}</span>
+                  </div>
+                ))}
               </div>
 
-              {wallet ? (
-                <div className="bg-neutral-900/80 p-4 mt-4 flex flex-col gap-2 overflow-y-scroll w-full md:overflow-y-hidden">
-                  <div className="flex flex-col gap-2">
-                    <h2 className="text-lg font-semibold">public key</h2>
-                    <code className="text-xs ">{wallet?.publicKey}</code>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <div className="flex justify-between">
-                      <h2 className="text-lg font-semibold">secret key</h2>
-                      <button
-                        onClick={() => setShowSecret((p) => !p)}
-                        className="cursor-pointer"
-                      >
-                        {showSecret ? <Eye size={18} /> : <EyeOff size={18} />}
-                      </button>
-                    </div>
-                    {showSecret ? (
-                      <code className="text-xs h-8">{wallet?.secretKey}</code>
-                    ) : (
-                      <p className="h-8">
-                        ...............................................................
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                <div className="w-full h-52 flex items-center justify-center ">
-                  <p className="text-gray-600">
-                    Add wallet with the help of seed phrase
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        ) : (
-          <div className="w-full h-80 flex items-center justify-center">
-            <p className="text-center">
-              In order to create a wallet generate a seed phrase first ..
-            </p>
-          </div>
-        )}
-      </div>
-
-      {wallet && (
-        <div className="mt-4 ">
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
-              <div className="flex gap-2">
-                <img
-                  src="/solana.png"
-                  alt="sol"
-                  className="w-10 h-10 md:w-14 md:h-14"
-                />
-                <div className="">
-                  <h1 className="font-bold flex gap-2 items-center text-sm md:text-lg">
-                    Solana
-                    <span>
-                      <VerifiedIcon className="w-4 h-4" fill="#7C3AED" />
-                    </span>
+              <div className="mt-4">
+                <div className="flex items-center justify-between px-2 md:px-10">
+                  <h1 className="font-bold text-xs md:text-base lg:text-lg">
+                    SOLANA WALLET
                   </h1>
-                  <p className="text-xs md:text-sm">{solbalance} SOL</p>
+                  <button
+                    onClick={generateWallet}
+                    className="bg-green-700 px-2 text-xs md:px-4 py-2 rounded-md text-black font-bold cursor-pointer"
+                  >
+                    Add wallet
+                  </button>
+                </div>
+
+                {wallet ? (
+                  <div className="bg-neutral-900/80 p-4 mt-4 flex flex-col gap-2 overflow-y-scroll w-full md:overflow-y-hidden">
+                    <div className="flex flex-col gap-2">
+                      <h2 className="text-lg font-semibold">public key</h2>
+                      <code className="text-xs ">{wallet?.publicKey}</code>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <div className="flex justify-between">
+                        <h2 className="text-lg font-semibold">secret key</h2>
+                        <button
+                          onClick={() => setShowSecret((p) => !p)}
+                          className="cursor-pointer"
+                        >
+                          {showSecret ? (
+                            <Eye size={18} />
+                          ) : (
+                            <EyeOff size={18} />
+                          )}
+                        </button>
+                      </div>
+                      {showSecret ? (
+                        <code className="text-xs h-8">{wallet?.secretKey}</code>
+                      ) : (
+                        <p className="h-8">
+                          ...............................................................
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-full h-52 flex items-center justify-center ">
+                    <p className="text-gray-600">
+                      Add wallet with the help of seed phrase
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="w-full h-80 flex items-center justify-center">
+              <p className="text-center">
+                In order to create a wallet generate a seed phrase first ..
+              </p>
+            </div>
+          )}
+        </div>
+
+        {wallet && (
+          <div className="mt-4 ">
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
+                <div className="flex gap-2">
+                  <img
+                    src="/solana.png"
+                    alt="sol"
+                    className="w-10 h-10 md:w-14 md:h-14"
+                  />
+                  <div className="">
+                    <h1 className="font-bold flex gap-2 items-center text-sm md:text-lg">
+                      Solana
+                      <span>
+                        <VerifiedIcon className="w-4 h-4" fill="#7C3AED" />
+                      </span>
+                    </h1>
+                    <p className="text-xs md:text-sm">{solbalance} SOL</p>
+                  </div>
+                </div>
+
+                <div>
+                  <button
+                    onClick={() => {
+                      setShow((p) => !p);
+                      setTokenType("SOL");
+                    }}
+                    className=" p-1.5 md:px-6 md:py-1.5 cursor-pointer rounded-md bg-white text-black flex gap-2 items-center "
+                  >
+                    <Send size={16} />
+                    <span className="hidden md:flex "> Send</span>
+                  </button>
+                  {show && (
+                    <div
+                      className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+                      onClick={() => setShow(false)}
+                    >
+                      <div onClick={(e) => e.stopPropagation()}>
+                        <SendModal
+                          onClose={() => setShow(false)}
+                          secretKey={wallet.secretKey}
+                          type={tokenType}
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              <div>
-                <button
-                  onClick={() => {
-                    setShow((p) => !p);
-                    setTokenType("SOL");
-                  }}
-                  className=" p-1.5 md:px-6 md:py-1.5 cursor-pointer rounded-md bg-white text-black flex gap-2 items-center "
-                >
-                  <Send size={16} />
-                  <span className="hidden md:flex "> Send</span>
-                </button>
+              <div className="flex justify-between bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
+                <div className="flex gap-2">
+                  <img
+                    src="/coin.png"
+                    alt="sol"
+                    className="w-10 h-10 md:w-14 md:h-14"
+                  />
+                  <div className="">
+                    <h1 className="font-bold flex gap-2 items-center text-sm md:text-lg">
+                      100x Devs
+                      <span>
+                        <VerifiedIcon className="w-4 h-4" fill="#7C3AED" />
+                      </span>
+                    </h1>
+                    <p className="text-xs md:text-sm">{kiratbalance} KIRAT</p>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <button
+                    onClick={() => {
+                      setTokenType("TOKEN");
+                      setShow((p) => !p);
+                    }}
+                    className="p-1.5 md:px-6 md:py-1.5 cursor-pointer rounded-md bg-white text-black flex gap-2 items-center "
+                  >
+                    <Send size={16} />
+                    <span className="hidden md:flex">Send</span>
+                  </button>
+                </div>
                 {show && (
                   <div
                     className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
@@ -191,55 +244,9 @@ export default function Wallet() {
                 )}
               </div>
             </div>
-
-            <div className="flex justify-between bg-neutral-900 items-center rounded-md px-4 py-2 cursor-pointer">
-              <div className="flex gap-2">
-                <img
-                  src="/coin.png"
-                  alt="sol"
-                  className="w-10 h-10 md:w-14 md:h-14"
-                />
-                <div className="">
-                  <h1 className="font-bold flex gap-2 items-center text-sm md:text-lg">
-                    100x Devs
-                    <span>
-                      <VerifiedIcon className="w-4 h-4" fill="#7C3AED" />
-                    </span>
-                  </h1>
-                  <p className="text-xs md:text-sm">{kiratbalance} KIRAT</p>
-                </div>
-              </div>
-
-              <div className="relative">
-                <button
-                  onClick={() => {
-                    setTokenType("TOKEN");
-                    setShow((p) => !p);
-                  }}
-                  className="p-1.5 md:px-6 md:py-1.5 cursor-pointer rounded-md bg-white text-black flex gap-2 items-center "
-                >
-                  <Send size={16} />
-                  <span className="hidden md:flex">Send</span>
-                </button>
-              </div>
-              {show && (
-                <div
-                  className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
-                  onClick={() => setShow(false)}
-                >
-                  <div onClick={(e) => e.stopPropagation()}>
-                    <SendModal
-                      onClose={() => setShow(false)}
-                      secretKey={wallet.secretKey}
-                      type={tokenType}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
